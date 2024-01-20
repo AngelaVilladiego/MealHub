@@ -1,16 +1,19 @@
 from pymongo import MongoClient
 import spoonacular as sp
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
+
 
 load_dotenv()
 api_key = os.getenv('SPOONACULAR_API_KEY')
 api = sp.API(api_key)
 
 app = Flask(__name__)
+CORS(app)
 
 # MongoDB setup
 client = MongoClient('mongodb+srv://Omario:Utk68tgciDee2Wv1@mealhubcluster.lfzbben.mongodb.net/?retryWrites=true&w=majority')
@@ -27,7 +30,9 @@ def signUp():
     user = {
         "username": user_data["username"],
         "password": user_data["password"],  # Storing the password directly (not secure)
-        "favourites": []
+        "favourites": [],
+        # "dietary_restriction": user_data["dietary_restriction"],
+
     }
     users_collection.insert_one(user)
     return jsonify({"message": "User created", "user_id": str(user["_id"])}), 201
