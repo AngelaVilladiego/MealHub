@@ -43,7 +43,7 @@ function SidebarNav() {
           </li>
           <li>
             <Link
-              to="/"
+              to="/shoppingList"
               class="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <ListBulletIcon class="size-8 rounded-lg  group-hover:text-gray-900" />
