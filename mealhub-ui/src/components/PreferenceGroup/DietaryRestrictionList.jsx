@@ -55,7 +55,7 @@ const DietaryRestrictionList = () => {
       <div className="mt-4">
         {step < steps.length && (
           <div>
-            <h5 className="text-center text-gray-700 text-3xl">{`Card${step + 1}/Step${step + 1}: ${steps[step].title}`}</h5>
+            <h5 className="text-center text-gray-700 text-3xl">{`Step${step + 1}: ${steps[step].title}`}</h5>
 
             <div className="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {steps[step].options.map((option, index) => (
