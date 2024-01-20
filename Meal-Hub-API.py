@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import spoonacular as sp
-from flask import Flask, request, jsonify, redirect, url_for
+from flask import Flask, request, jsonify
 import os
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
@@ -12,99 +12,80 @@ api = sp.API(api_key)
 
 app = Flask(__name__)
 
-## add database information here
-client = "mongodb://localhost:27017/DATABASENAMEIDK"
-db = client['DATABASE_NAME']
+# MongoDB setup
+client = MongoClient('mongodb+srv://Omario:Utk68tgciDee2Wv1@mealhubcluster.lfzbben.mongodb.net/?retryWrites=true&w=majority')
+db = client.main
 
+# Collection for recipes
+recipes_collection = db.recipes
 
-@app.route("/")
-def home():
-    return "Homepage"
-
-# UNTESTED. Signs user up and adds them to the DB, if user exists, will display message.
+# Collection for users
+users_collection = db.users
 @app.route("/signup", methods=['POST'])
 def signUp():
-    user_data = request.get_json()
-
-    # User dictionary model
+    user_data = request.json
     user = {
-        "_id": ObjectId(),
-        "username": user_data.get("username"),
-        "password": generate_password_hash(user_data.get("password")),
-        "favourites": user_data.get('favourites', []),
-        "dietary_restrictions": user_data.get('dietary_restrictions'),
-        "cuisine_preferences": user_data.get('cuisine_preferences'),
-        "days": user_data.get('days', {"Monday": 0, "Tuesday": 0,"Wednesday": 0,"Thursday": 0,"Friday": 0,"Saturday": 0,"Sunday": 0}),
-        "advancePrep": user_data.get('advancePrep', True)
+        "username": user_data["username"],
+        "password": user_data["password"],  # Storing the password directly (not secure)
+        "favourites": []
     }
-
-    # Uncomment this when the db is finished -> adds the user to the DB
-    # db.users.insert_one(user)
-
-    return "User created"
-
-# Each time a user favourites a recipe, it gets added to their favourites list.
-@app.route('/add_favourite', methods=['POST'])
-def add_favourite():
-    data = request.json()
-
-    user_id = data.get('user_id')
-    recipe_id = data.get('recipe_id')
-
-    favourite = {
-        "_id" : ObjectId(),
-        "recipe_id": recipe_id,
-        "user_id": user_id
-    }
-
-    # Update the DB to add a favourite object to the favourites list
-    # db.users.update_one({"_id": user_id}, {"$push": {"favourites": favourite}})
-
-    return "Favourite added successfully!"
+    users_collection.insert_one(user)
+    return jsonify({"message": "User created", "user_id": str(user["_id"])}), 201
 
 @app.route("/login", methods=['POST'])
 def login():
-    user_data = request.json()
+    user_data = request.json
+    user = users_collection.find_one({"username": user_data["username"]})
 
-    username = user_data.get('username')
-    password = user_data.get('password')
-
-    # user = db.users.find_one({'username': username})
-
-    # check if the username exists with the hashed password in the DB
-    # if user and check_password_hash(user['password'], password):
-    #     return "Login successful", 200
-    # else:
-    #     return "Invalid username or password"
-
-    return "login page spaceholder"
-
-# Returns the list of favourite recipes for the user with the current ID.
-@app.route('/user/<user_id>/favourites', methods=['GET'])
-def get_favourites(userID):
-    user = db.users.find_one({'_id': ObjectId(userID)})
-
-    if user:
-        return {'favourites': user.get('favourites', [])}
+    if user and user["password"] == user_data["password"]:
+        return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
     else:
-        return "No user found"
+        return jsonify({"message": "Invalid username or password"}), 401
 
-
-# Use ID of a favourite recipe to find recipe from the API
-@app.route("/search")
+@app.route('/search', methods=['GET'])
 def search():
-    return "Search Bar"
+    query = request.args.get('query')
+    number_of_results = request.args.get('number', 10)
+    results = api.search_recipes(query, number=number_of_results)
+    return jsonify(results.json())
 
-# https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
-# TESTING ONLY Display random recipes to the user. *No restrictions added yet
-@app.route("/dashboard")
-def recipeInfo():
-    # return "RecipeInfo"
-    res = api.get_random_recipes()
-    recipe = res.json()
-    recipeURL = recipe["recipes"][0]["sourceUrl"]
+@app.route('/add_favourite', methods=['POST'])
+def add_favourite():
+    data = request.json
+    user_id = data['user_id']
+    recipe_id = data['recipe_id']
+    recipe_url = data['recipe_url']
 
-    return recipeURL
+    # Check if the recipe already exists in the 'recipes' collection
+    recipe = recipes_collection.find_one({"id": recipe_id})
+    if not recipe:
+        recipe = {"id": recipe_id, "url": recipe_url}
+        recipes_collection.insert_one(recipe)
+
+    # Add the recipe's ObjectId to the user's 'favourites' list
+    users_collection.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$addToSet": {"favourites": recipe_id}}
+    )
+    return jsonify({"message": "Favourite added successfully!"}), 200
+
+@app.route('/user/<user_id>/favourites', methods=['GET'])
+def get_favourites(user_id):
+    user = users_collection.find_one({"_id": ObjectId(user_id)})
+    if user:
+        favourite_recipe_ids = user['favourites']
+        favourite_recipes = recipes_collection.find({"id": {"$in": favourite_recipe_ids}})
+
+        # Convert the recipes to JSON serializable format
+        favourite_recipes_list = []
+        for recipe in favourite_recipes:
+            recipe['_id'] = str(recipe['_id'])  # Convert ObjectId to string
+            favourite_recipes_list.append(recipe)
+
+        return jsonify(favourite_recipes_list), 200
+    else:
+        return jsonify({"message": "No user found"}), 404
+
 
 if __name__ == "__main__":
     app.run(debug=True)
