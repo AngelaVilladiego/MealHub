@@ -12,7 +12,7 @@ function WeekPagerButtonGroup() {
 
       <button
         type="button"
-        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-orange-500"
+        class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-orange-500"
       >
         <ChevronRightIcon class="w-5 h-5 mx-1" />
       </button>
