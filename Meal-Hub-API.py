@@ -11,6 +11,7 @@ api_key = os.getenv('SPOONACULAR_API_KEY')
 api = sp.API(api_key)
 
 app = Flask(__name__)
+# CORS(app)
 
 # MongoDB setup
 client = MongoClient('mongodb+srv://Omario:Utk68tgciDee2Wv1@mealhubcluster.lfzbben.mongodb.net/?retryWrites=true&w=majority')
@@ -86,6 +87,21 @@ def get_favourites(user_id):
     else:
         return jsonify({"message": "No user found"}), 404
 
+# Use ID of a favourite recipe to find recipe from the API
+@app.route("/search")
+def search():
+    return "Search Bar"
+
+# https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
+# TESTING ONLY Display random recipes to the user. *No restrictions added yet
+@app.route("/dashboard")
+def recipeInfo():
+    # return "RecipeInfo"
+    res = api.get_random_recipes()
+    recipe = res.json()
+    recipeURL = recipe["recipes"][0]["sourceUrl"]
+
+    return recipeURL
 
 if __name__ == "__main__":
     app.run(debug=True)
