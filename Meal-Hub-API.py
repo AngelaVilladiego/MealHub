@@ -3,6 +3,8 @@ import spoonacular as sp
 from flask import Flask, request, jsonify, redirect, url_for
 import os
 from dotenv import load_dotenv
+from bson.objectid import ObjectId
+
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -15,24 +17,6 @@ app = Flask(__name__)
 # add database information here
 # app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
 # mongo = PyMongo(app)
-
-# User dictionary model
-user = {
-    "_id": "userID",
-    "username": "Joe Doe",
-    "password_hash": "hashedPassword",
-    "favourites": [
-        {
-            "_id": "favouriteId",
-            "recipe_id": "recipe1",
-            "user_id": "userId"
-        },
-    ],
-    "dietary_restrictions": "Vegetarian",
-    "cuisine_preferences": "French",
-    "days": {"Monday": 0, "Tuesday": 0,"Wednesday": 0,"Thursday": 0,"Friday": 0,"Saturday": 0,"Sunday": 0},
-    "advancePrep": True
-}
 
 
 # Returns the list of favourite recipes for the user with the current ID.
@@ -47,8 +31,43 @@ def home():
 # UNTESTED. Signs user up and adds them to the DB, if user exists, will display message.
 @app.route("/signup", methods=['POST'])
 def signUp():
-    return
+    user_data = request.get_json()
 
+    # User dictionary model
+    user = {
+        "_id": ObjectId(),
+        "username": user_data.get("username"),
+        "password": user_data.get("password"),
+        "favourites": user_data.get('favourites', []),
+        "dietary_restrictions": user_data.get('dietary_restrictions'),
+        "cuisine_preferences": user_data.get('cuisine_preferences'),
+        "days": user_data.get('days', {"Monday": 0, "Tuesday": 0,"Wednesday": 0,"Thursday": 0,"Friday": 0,"Saturday": 0,"Sunday": 0}),
+        "advancePrep": user_data.get('advancePrep', False)
+    }
+
+    # Uncomment this when the db is finished -> adds the user to the DB
+    # db.users.insert_one(user)
+
+    return "User created"
+
+# Each time a user favourites a recipe, it gets added to their favourites list.
+@app.route('/add_favourite', methods=['POST'])
+def add_favourite():
+    data = request.json()
+
+    user_id = data.get('user_id')
+    recipe_id = data.get('recipe_id')
+
+    favourite = {
+        "_id" : ObjectId(),
+        "recipe_id": recipe_id,
+        "user_id": user_id
+    }
+
+    # Update the DB to add a favourite object to the favourites list
+    # db.users.update_one({"_id": user_id}, {"$push": {"favourites": favourite}})
+
+    return "Favourite added successfully!"
 
 @app.route("/login")
 def login():
