@@ -1,7 +1,9 @@
+from pymongo import MongoClient
 import spoonacular as sp
 from flask import Flask, request, jsonify, redirect, url_for
 import os
 from dotenv import load_dotenv
+from bson.objectid import ObjectId
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -9,59 +11,83 @@ api_key = os.getenv('SPOONACULAR_API_KEY')
 api = sp.API(api_key)
 
 app = Flask(__name__)
-# app.config['DATABASE_URI_GOES_HERE'] = 'blahblah:////tmp/test.db'
-# db = DATABASE(app)
 
-# add database information here
+## add database information here
+client = "mongodb://localhost:27017/DATABASENAMEIDK"
+db = client['DATABASE_NAME']
 
-# Favourite recipe model.
-# class Favourite(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     recipe_id = db.Column(db.String(120), nullable=False)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-#
-# # User model that has a relationship to a Favourite recipe model
-# class User(db.model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password_hash = db.Column(db.String(120), nullable=False)
-#     favourites = db.relationship('Favourite', backref='user', lazy=True)
-#
-# # Call this function to add a favourite recipe to the User's "favourites"
-# def add_favourite(user, recipe_id):
-#     favourite = Favourite(recipe_id=recipe_id, user=user)
-#     db.session.add(favourite)
-#     db.session.commit()
-
-# Returns the list of favourite recipes for the user with the current ID.
-def get_favourites(user):
-    return
-
-# https://api.spoonacular.com/recipes/random?apiKey=35b3e7d707684b61bf0463a2834b2c86
 
 @app.route("/")
 def home():
-    return "Homepage / Dashboard"
+    return "Homepage"
 
 # UNTESTED. Signs user up and adds them to the DB, if user exists, will display message.
-# @app.route("/signup", methods=['POST'])
-# def signUp():
-#     data = request.get_json()
-#     username = data.get('username')
-#     password = data.get('password')
-#     if not username or not password:
-#         return jsonify({'message': 'Both username and password are required'}), 400
-#     if User.query.filter_by(username=username).first() is not None:
-#         return jsonify({'message': 'Username already exists'}), 400
-#     user = User(username=username, password_hash=generate_password_hash(password))
-#     db.session.add(user)
-#     db.session.commit()
-#     return redirect(url_for('login'))
+@app.route("/signup", methods=['POST'])
+def signUp():
+    user_data = request.get_json()
 
+    # User dictionary model
+    user = {
+        "_id": ObjectId(),
+        "username": user_data.get("username"),
+        "password": generate_password_hash(user_data.get("password")),
+        "favourites": user_data.get('favourites', []),
+        "dietary_restrictions": user_data.get('dietary_restrictions'),
+        "cuisine_preferences": user_data.get('cuisine_preferences'),
+        "days": user_data.get('days', {"Monday": 0, "Tuesday": 0,"Wednesday": 0,"Thursday": 0,"Friday": 0,"Saturday": 0,"Sunday": 0}),
+        "advancePrep": user_data.get('advancePrep', True)
+    }
 
-@app.route("/login")
+    # Uncomment this when the db is finished -> adds the user to the DB
+    # db.users.insert_one(user)
+
+    return "User created"
+
+# Each time a user favourites a recipe, it gets added to their favourites list.
+@app.route('/add_favourite', methods=['POST'])
+def add_favourite():
+    data = request.json()
+
+    user_id = data.get('user_id')
+    recipe_id = data.get('recipe_id')
+
+    favourite = {
+        "_id" : ObjectId(),
+        "recipe_id": recipe_id,
+        "user_id": user_id
+    }
+
+    # Update the DB to add a favourite object to the favourites list
+    # db.users.update_one({"_id": user_id}, {"$push": {"favourites": favourite}})
+
+    return "Favourite added successfully!"
+
+@app.route("/login", methods=['POST'])
 def login():
+    user_data = request.json()
+
+    username = user_data.get('username')
+    password = user_data.get('password')
+
+    # user = db.users.find_one({'username': username})
+
+    # check if the username exists with the hashed password in the DB
+    # if user and check_password_hash(user['password'], password):
+    #     return "Login successful", 200
+    # else:
+    #     return "Invalid username or password"
+
     return "login page spaceholder"
+
+# Returns the list of favourite recipes for the user with the current ID.
+@app.route('/user/<user_id>/favourites', methods=['GET'])
+def get_favourites(userID):
+    user = db.users.find_one({'_id': ObjectId(userID)})
+
+    if user:
+        return {'favourites': user.get('favourites', [])}
+    else:
+        return "No user found"
 
 
 # Use ID of a favourite recipe to find recipe from the API
@@ -69,8 +95,9 @@ def login():
 def search():
     return "Search Bar"
 
-# Display random recipes to the user. *No restrictions added yet
-@app.route("/recipeInfo")
+# https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
+# TESTING ONLY Display random recipes to the user. *No restrictions added yet
+@app.route("/dashboard")
 def recipeInfo():
     # return "RecipeInfo"
     res = api.get_random_recipes()
