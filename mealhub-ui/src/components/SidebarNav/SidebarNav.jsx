@@ -6,6 +6,7 @@ import {
   StarIcon,
   UserIcon,
   ArrowRightStartOnRectangleIcon,
+  HeartIcon
 } from "@heroicons/react/24/outline";
 
 function SidebarNav() {
@@ -57,6 +58,15 @@ function SidebarNav() {
             >
               <StarIcon class="size-8 rounded-lg  group-hover:text-gray-900" />
               <span class="ms-3 pt-1">Saved Meals</span>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/dietraryRestrictions"
+              class="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
+            >
+              <HeartIcon class="size-8 rounded-lg  group-hover:text-gray-900" />
+              <span class="ms-3 pt-1">Preferences</span>
             </Link>
           </li>
           <li>
