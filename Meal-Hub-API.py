@@ -1,4 +1,4 @@
-# import PyMongo
+from pymongo import MongoClient
 import spoonacular as sp
 from flask import Flask, request, jsonify, redirect, url_for
 import os
@@ -14,14 +14,10 @@ api = sp.API(api_key)
 
 app = Flask(__name__)
 
-# add database information here
-# app.config["MONGO_URI"] = "mongodb://localhost:27017/myDatabase"
-# mongo = PyMongo(app)
+## add database information here
+client = "mongodb://localhost:27017/DATABASENAMEIDK"
+db = client['DATABASE_NAME']
 
-
-# Returns the list of favourite recipes for the user with the current ID.
-def get_favourites(user):
-    return
 
 # https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
 @app.route("/")
@@ -85,6 +81,16 @@ def login():
     #     return "Invalid username or password"
 
     return "login page spaceholder"
+
+# Returns the list of favourite recipes for the user with the current ID.
+@app.route('/user/<user_id>/favourites', methods=['GET'])
+def get_favourites(userID):
+    user = db.users.find_one({'_id': ObjectId(userID)})
+
+    if user:
+        return {'favourites': user.get('favourites', [])}
+    else:
+        return "No user found"
 
 
 # Use ID of a favourite recipe to find recipe from the API
