@@ -1,5 +1,5 @@
 import spoonacular as sp
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, redirect, url_for
 import os
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -34,7 +34,7 @@ def home():
 
 @app.route("/signup", methods=['POST'])
 def signUp():
-    data.request.get_json()
+    data = request.get_json()
     username = data.get('username')
     password = data.get('password')
     if not username or not password:
@@ -44,8 +44,7 @@ def signUp():
     user = User(username=username, password_hash=generate_password_hash(password))
     db.session.add(user)
     db.session.commit()
-    return jsonify({'message': 'User registered successfully'}), 201
-
+    return redirect(url_for('login'))
 
 @app.route("/login")
 def login():
