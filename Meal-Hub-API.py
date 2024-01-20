@@ -1,8 +1,9 @@
+# import PyMongo
 import spoonacular as sp
 from flask import Flask, request, jsonify, redirect, url_for
 import os
 from dotenv import load_dotenv
-from flask_pymongo import PyMongo
+
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
