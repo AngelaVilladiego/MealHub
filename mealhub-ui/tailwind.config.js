@@ -6,6 +6,11 @@ export default {
   ],
   theme: {
     extend: {},
+    fontFamily: {
+      "sans": ["Martel Sans", "sans-serif"],
+      "header": ["Lato", "sans-serif"],
+      "body": ["Martel Sans", "sans-serif"],
+    }
   },
   plugins: [],
 }
