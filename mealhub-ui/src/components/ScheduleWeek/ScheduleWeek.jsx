@@ -4,7 +4,7 @@ import CheckboxGroup from "../CheckboxGroup/CheckboxGroup";
 
 function ScheduleWeek() {
   return (
-    <div class="grid grid-cols-7 gap-2">
+    <div class="grid grid-cols-2 md-grid-cols-4 gap-2">
       <ScheduleDay dayLabel={"S"}>
         <CheckboxGroup />
       </ScheduleDay>
