@@ -4,8 +4,6 @@ from flask import Flask, request, jsonify, redirect, url_for
 import os
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
-
-
 from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
@@ -19,10 +17,9 @@ client = "mongodb://localhost:27017/DATABASENAMEIDK"
 db = client['DATABASE_NAME']
 
 
-# https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
 @app.route("/")
 def home():
-    return "Homepage / Dashboard"
+    return "Homepage"
 
 # UNTESTED. Signs user up and adds them to the DB, if user exists, will display message.
 @app.route("/signup", methods=['POST'])
@@ -38,7 +35,7 @@ def signUp():
         "dietary_restrictions": user_data.get('dietary_restrictions'),
         "cuisine_preferences": user_data.get('cuisine_preferences'),
         "days": user_data.get('days', {"Monday": 0, "Tuesday": 0,"Wednesday": 0,"Thursday": 0,"Friday": 0,"Saturday": 0,"Sunday": 0}),
-        "advancePrep": user_data.get('advancePrep', False)
+        "advancePrep": user_data.get('advancePrep', True)
     }
 
     # Uncomment this when the db is finished -> adds the user to the DB
@@ -98,8 +95,9 @@ def get_favourites(userID):
 def search():
     return "Search Bar"
 
+# https://api.spoonacular.com/recipes/random?number=1&include-tags=vegetarian,dessert&exclude-tags=quinoa
 # TESTING ONLY Display random recipes to the user. *No restrictions added yet
-@app.route("/recipeInfo")
+@app.route("/dashboard")
 def recipeInfo():
     # return "RecipeInfo"
     res = api.get_random_recipes()
