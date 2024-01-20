@@ -37,7 +37,7 @@ def signUp():
     user = {
         "_id": ObjectId(),
         "username": user_data.get("username"),
-        "password": user_data.get("password"),
+        "password": generate_password_hash(user_data.get("password")),
         "favourites": user_data.get('favourites', []),
         "dietary_restrictions": user_data.get('dietary_restrictions'),
         "cuisine_preferences": user_data.get('cuisine_preferences'),
@@ -69,8 +69,21 @@ def add_favourite():
 
     return "Favourite added successfully!"
 
-@app.route("/login")
+@app.route("/login", methods=['POST'])
 def login():
+    user_data = request.json()
+
+    username = user_data.get('username')
+    password = user_data.get('password')
+
+    # user = db.users.find_one({'username': username})
+
+    # check if the username exists with the hashed password in the DB
+    # if user and check_password_hash(user['password'], password):
+    #     return "Login successful", 200
+    # else:
+    #     return "Invalid username or password"
+
     return "login page spaceholder"
 
 
