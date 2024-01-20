@@ -12,9 +12,53 @@ function SignUp() {
   };
 
   const handleSubmit = (e) => {
+    console.log("HANDLING SUBMIT");
     e.preventDefault();
-    console.log(formData);
-    // Here you can handle the form data, like sending it to your backend
+    // fetch('http://127.0.0.1:5000/signup', {  // replace with your Flask app's URL
+    //     method: 'POST',
+    //     headers: {
+    //     'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(formData),
+    //     // body: 
+    //     // {
+    //     //     "username": "testuser3",
+    //     //     "password": "testpassword3"
+    //     // },
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log('Success:', data);
+    //     // handle response here
+    // })
+    // .catch((error) => {
+    //     console.error('Error:', error);
+    // });
+
+    fetch('http://127.0.0.1:5000/signup', {  // replace with your Flask app's URL
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        if (response.ok) {
+            return(response.json());
+        }
+        Promise.reject("RESPONSE NOT OKAY")
+    })
+    .then(responseJson => {
+        //work with response
+        console.log(responseJson);
+    })
+    .catch (responseError => {
+        console.log("Status: ", response.status, "Info: ", response.statusText);
+
+        response.json().then((json) => {
+            console.log(json);
+        })
+    });
   };
 
   return (
@@ -31,7 +75,7 @@ function SignUp() {
         Password:
         <input type="password" name="password" onChange={handleChange} />
       </label>
-      <input type="submit" value="Sign Up" />
+      <button  type="submit">Sign Up</button>
     </form>
   );
 }

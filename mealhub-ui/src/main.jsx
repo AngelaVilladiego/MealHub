@@ -8,6 +8,7 @@ import DashLayout from "./pages/DashLayout/DashLayout.jsx";
 import Overview from "./pages/Overview/Overview.jsx";
 import ShoppingList from "./pages/ShoppingList/ShoppingList.jsx";
 import DietraryRestrictionList from "./components/PreferenceGroup/DietaryRestrictionList.jsx";
+import SignUp from "./pages/SignUp/SignUp.jsx";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -19,8 +20,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="shoppingList" element={<ShoppingList />} />
         </Route>
         <Route path="dietraryRestrictions" element={<DietraryRestrictionList />}>
-
         </Route>
+        <Route path="signUp" element={<SignUp/>} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>
