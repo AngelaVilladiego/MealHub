@@ -7,6 +7,7 @@ import { Squares2X2Icon, ListBulletIcon, StarIcon, UserIcon, ArrowRightStartOnRe
     return(
         <aside id="nav-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen" role="navigation" aria-label="Main">
             <div class="flex flex-col h-full items-stretch px-3 py-4 overflow-y-auto bg-orange-500 text-white">
+              <span class="font-brand text-4xl pt-4">MealHub</span>
               <div id="profile-mini" class="p-2 self-center aspect-square flex flex-col justify-center items-center gap-3 my-5 rounded-lg hover:cursor-pointer group">
                 <img 
                   src={defaultAvatar} 

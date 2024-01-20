@@ -8,6 +8,7 @@ export default {
     extend: {},
     fontFamily: {
       "sans": ["Martel Sans", "sans-serif"],
+      "brand": ["Satisfy", "cursive"],
       "header": ["Lato", "sans-serif"],
       "body": ["Martel Sans", "sans-serif"],
     }
