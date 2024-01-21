@@ -12,14 +12,17 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 api_key = os.getenv('API_KEY')
+mongo_pwd = os.getenv('MONGO_PWD')
+
 api = sp.API(api_key)
+
 
 app = Flask(__name__)
 CORS(app)
 
 # MongoDB setup
 client = MongoClient(
-    'mongodb+srv://Omario:Utk68tgciDee2Wv1@mealhubcluster.lfzbben.mongodb.net/?retryWrites=true&w=majority')
+    f'mongodb+srv://Omario:{mongo_pwd}@mealhubcluster.lfzbben.mongodb.net/?retryWrites=true&w=majority')
 db = client.main
 
 # Collection for recipes
