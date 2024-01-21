@@ -1,14 +1,14 @@
 import React from "react";
 
-function CardCheckbox({ labelText, isSelected, onToggleOption }) {
+function CircleCheckbox({ labelText, isSelected, onToggleOption }) {
   return (
     <label
-      className={` text-gray-600 p-8 border-2 bg-gray-50
-      border-gray-300 rounded-lg 
+      className={` text-gray-600 p-2 border-2 bg-gray-50
+      border-gray-300 rounded-full 
      cursor-pointer transition-all ease-in-out 
      hover:shadow-md hover:-translate-x-1 hover:-translate-y-1
      hover:bg-white hover:text-gray-800
-     aspect-square w-48 flex flex-col items-center justify-center
+      h-20 aspect-square flex flex-col items-center justify-center
      
         ${
           isSelected
@@ -16,7 +16,7 @@ function CardCheckbox({ labelText, isSelected, onToggleOption }) {
             : ""
         }`}
     >
-      <span className="text-lg font-bold text-center">{labelText}</span>
+      <span className="text-xl font-bold uppercase">{labelText.charAt(0)}</span>
       <input
         type="checkbox"
         className="hidden"
@@ -27,4 +27,4 @@ function CardCheckbox({ labelText, isSelected, onToggleOption }) {
   );
 }
 
-export default CardCheckbox;
+export default CircleCheckbox;

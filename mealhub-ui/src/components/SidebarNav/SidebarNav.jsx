@@ -35,7 +35,7 @@ function SidebarNav() {
         <ul className="grow flex flex-col gap-y-2 text-lg">
           <li>
             <Link
-              to="/"
+              to="/dash/"
               className="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <Squares2X2Icon className="size-8 rounded-lg  group-hover:text-gray-900" />
@@ -44,7 +44,7 @@ function SidebarNav() {
           </li>
           <li>
             <Link
-              to="/shoppingList"
+              to="/dash/shoppingList"
               className="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <ListBulletIcon className="size-8 rounded-lg  group-hover:text-gray-900" />
@@ -53,7 +53,7 @@ function SidebarNav() {
           </li>
           <li>
             <Link
-              to="/"
+              to="/dash/favourites"
               className="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <StarIcon className="size-8 rounded-lg  group-hover:text-gray-900" />
@@ -62,7 +62,7 @@ function SidebarNav() {
           </li>
           <li>
             <Link
-              to="/dietraryRestrictions"
+              to="/dash/preferences"
               className="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <HeartIcon className="size-8 rounded-lg  group-hover:text-gray-900" />
@@ -80,7 +80,7 @@ function SidebarNav() {
           </li>
           <li className="mt-auto">
             <Link
-              to="/"
+              to="/signup"
               className="flex items-center p-2 font-bold rounded-lg hover:bg-orange-200 hover:text-gray-900 group"
             >
               <ArrowRightStartOnRectangleIcon className="size-8 rounded-lg  group-hover:text-gray-900" />

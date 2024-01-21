@@ -13,13 +13,13 @@ export const GLOBALS = {
 export const PREFERENCE_OPTIONS = {
   DIETARY_RESTRICTIONS: ["Vegan", "Vegetarian", "Gluten-free"],
   WEEKDAYS: [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
     "Saturday",
-    "Sunday",
   ],
   CUISINES: [
     "Asian",
