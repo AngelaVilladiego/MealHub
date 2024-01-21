@@ -10,7 +10,6 @@ import ShoppingList from "./pages/ShoppingList/ShoppingList.jsx";
 import DietraryRestrictionList from "./components/PreferenceGroup/DietaryRestrictionList.jsx";
 // import ProfilePage from "./pages/ProfileLayout/ProfilePage.jsx";
 
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -20,8 +19,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           {/* <Route index element={<ProfilePage />} /> */}
           <Route path="shoppingList" element={<ShoppingList />} />
         </Route>
-        <Route path="dietraryRestrictions" element={<DietraryRestrictionList />}>
-        </Route>
+        <Route
+          path="dietraryRestrictions"
+          element={<DietraryRestrictionList />}
+        ></Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

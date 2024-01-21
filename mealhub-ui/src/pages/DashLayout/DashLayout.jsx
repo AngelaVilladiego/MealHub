@@ -8,11 +8,9 @@ function DashLayout() {
       <SidebarNav />
       <div
         id="content-wrapper"
-        class="ml-56 left-56 min-h-screen flex flex-col items-center p-8 pt-24"
+        className="ml-56 left-56 min-h-screen flex flex-col items-center p-8"
       >
-        <div id="content-wrapper-inner" class="">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </>
   );
