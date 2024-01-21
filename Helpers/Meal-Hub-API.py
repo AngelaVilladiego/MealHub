@@ -123,7 +123,8 @@ def get_recipe_for_user(user_id):
         # Uncommet this when it's needed
         # f"https://api.spoonacular.com/recipes/random?number=1&include-tags={cuisine_preferences}&exclude-tags={dietary_restriction}&apiKey={api_key}")
 
-        'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey=35b3e7d707684b61bf0463a2834b2c86'
+        # 'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey=35b3e7d707684b61bf0463a2834b2c86'
+        f'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey={api_key}'
     )
     data = json.loads(response.text)
     recipe_id = data["recipes"][0]["id"]
