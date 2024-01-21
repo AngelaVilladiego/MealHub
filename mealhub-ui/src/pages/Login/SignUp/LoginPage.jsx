@@ -1,75 +1,70 @@
-import React from "react";
-export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+import { React, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-  const [username, setUsername] = useState("");
+function LoginPage() {
+  const navigate = useNavigate();
 
-  const [password, setPassword] = useState("");
-
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const navToSignup = () => {
+    navigate("/signup");
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-black">
-      <div className="m-auto w-full max-w-md p-6 bg-white dark:bg-gray-900 shadow rounded-lg">
-        <h1 className="text-xl font-semibold text-gray-700 dark:text-white">
-          Login
-        </h1>
-
-        <div className="mt-4">
-          <Input
-            id="username"
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-            className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+    <div className="p-8 flex flex-col gap-3 items-center h-screen text-gray-800">
+      <span className="font-brand text-orange-500 text-4xl pb-16 text-center">
+        MealHub
+      </span>
+      <form className="w-4/12 mx-auto">
+        <h1 className="mb-10 text-2xl font-header">Log in</h1>
+        <div className="mb-5">
+          <label
+            htmlFor="email"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Your email
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lgblock w-full p-2.5"
+            placeholder="name@flowbite.com"
+            required
           />
         </div>
-
-        <div className="mt-4">
-          <div className="flex items-center">
-            <Input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-            />
+        <div className="mb-5">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Your password
+          </label>
+          <input
+            type="password"
+            id="password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            required
+          />
+        </div>
+        <span className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-3">
+            Not a member?
             <button
               type="button"
-              className="ml-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
-              onClick={togglePasswordVisibility}
+              onClick={navToSignup}
+              className="text-white bg-emerald-500 hover:bg-emerald-700 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
             >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
+              Sign Up
             </button>
-          </div>
-        </div>
-
-        <div className="mt-6">
-          <Button className="w-full rounded-md bg-indigo-600 py-2 px-4 text-white hover:bg-indigo-700 dark:hover:bg-indigo-800">
-            Login
-          </Button>
-        </div>
-        <div className="mt-6">
-          <Button className="w-full rounded-md bg-blue-600 py-2 px-4 text-white hover:bg-blue-700 dark:hover:bg-blue-800">
-            Create Account
-          </Button>
-        </div>
-
-        <div className="mt-4 flex justify-between">
-          <Alert>
-            <AlertTitle>Need help?</AlertTitle>
-            <AlertDescription>Contact support for assistance.</AlertDescription>
-          </Alert>
-        </div>
-      </div>
+          </span>
+          <button
+            type="submit"
+            className="text-white bg-orange-500 hover:bg-orange-700 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            Log in
+          </button>
+        </span>
+      </form>
     </div>
   );
 }
+
+export default LoginPage;

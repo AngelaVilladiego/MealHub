@@ -9,8 +9,9 @@ import Overview from "./pages/Overview/Overview.jsx";
 import ShoppingList from "./pages/ShoppingList/ShoppingList.jsx";
 import DietraryRestrictionList from "./components/PreferenceGroup/PreferencesQuestionnaire.jsx";
 import Questionnaire from "./pages/Questionnaire/Questionnaire.jsx";
+import Login from "./pages/Login/SignUp/LoginPage.jsx";
+import SignUpPage from "./pages/Login/SignUp/SignUp.jsx";
 // import ProfilePage from "./pages/ProfileLayout/ProfilePage.jsx";
-
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -20,8 +21,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           {/* <Route index element={<ProfilePage />} /> */}
           <Route path="shoppingList" element={<ShoppingList />} />
         </Route>
-        <Route path="oldPrefs" element={<DietraryRestrictionList />} />
-        <Route index element={<Questionnaire />} />
+        <Route index element={<Login />} />
+        <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route path="/signup/questionnaire" element={<Questionnaire />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>

@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { PREFERENCE_OPTIONS } from "../../globals";
 import CardCheckbox from "../../components/CardCheckbox/CardCheckbox";
 import "./Questionnaire.css";
@@ -9,6 +9,9 @@ import CircleCheckbox from "../../components/CircleCheckbox.jsx/CircleCheckbox";
 
 function Questionnaire() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const username = location.state["username"];
+  const password = location.state["password"];
 
   const [step, setStep] = useState(0);
   const [questionnaireDone, setQuestionnaireDone] = useState(false);

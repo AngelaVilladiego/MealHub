@@ -1,194 +1,98 @@
-// import React from "react";
+import { React, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// const languages = [
-//   { label: "English", value: "en" },
-//   { label: "French", value: "fr" },
-//   { label: "German", value: "de" },
-//   { label: "Spanish", value: "es" },
-//   { label: "Portuguese", value: "pt" },
-//   { label: "Russian", value: "ru" },
-//   { label: "Japanese", value: "ja" },
-//   { label: "Korean", value: "ko" },
-//   { label: "Chinese", value: "zh" },
-// ];
+function SignUpPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-// const accountFormSchema = z.object({
-//   name: z
-//     .string()
-//     .min(2, {
-//       message: "Name must be at least 2 characters.",
-//     })
-//     .max(30, {
-//       message: "Name must not be longer than 30 characters.",
-//     }),
-//   dob: z.date({
-//     required_error: "A date of birth is required.",
-//   }),
-//   language: z.string({
-//     required_error: "Please select a language.",
-//   }),
-// });
+  const navToLogin = () => {
+    navigate("/");
+  };
 
-// const defaultValues = {
-//   // name: "Your name",
-//   // dob: new Date("2023-01-23"),
-// };
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-// const AccountFormFields = () => {
-//   const form = useForm<AccountFormValues>({
-//     resolver: zodResolver(accountFormSchema),
-//     defaultValues,
-//   });
+    navigate("/signup/questionnaire", {
+      state: { username: email, password: password },
+    });
+  };
 
-//   function onSubmit(data) {
-//     toast({
-//       title: "You submitted the following values:",
-//       description: (
-//         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-//           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-//         </pre>
-//       ),
-//     });
-//   }
-//   return (
-//     <div className="space-y-6 p-3 h-screen">
-//       <div>
-//         <h3 className="text-lg font-medium">Account</h3>
-//         <p className="text-sm text-muted-foreground">
-//           Update your account settings. Set your preferred language and
-//           timezone.
-//         </p>
-//       </div>
-//       <Separator />
-//       <Form {...form}>
-//         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-//           <FormField
-//             control={form.control}
-//             name="name"
-//             render={({ field }) => (
-//               <FormItem>
-//                 <FormLabel>Name</FormLabel>
-//                 <FormControl>
-//                   <Input placeholder="Your name" {...field} />
-//                 </FormControl>
-//                 <FormDescription>
-//                   This is the name that will be displayed on your profile and in
-//                   emails.
-//                 </FormDescription>
-//                 <FormMessage />
-//               </FormItem>
-//             )}
-//           />
-//           <FormField
-//             control={form.control}
-//             name="dob"
-//             render={({ field }) => (
-//               <FormItem className="flex flex-col">
-//                 <FormLabel>Date of birth</FormLabel>
-//                 <Popover>
-//                   <PopoverTrigger asChild>
-//                     <FormControl>
-//                       <Button
-//                         variant={"outline"}
-//                         className={cn(
-//                           "w-[240px] pl-3 text-left font-normal",
-//                           !field.value && "text-muted-foreground",
-//                         )}
-//                       >
-//                         {field.value ? (
-//                           format(field.value, "PPP")
-//                         ) : (
-//                           <span>Pick a date</span>
-//                         )}
-//                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-//                       </Button>
-//                     </FormControl>
-//                   </PopoverTrigger>
-//                   <PopoverContent className="w-auto p-0" align="start">
-//                     <Calendar
-//                       mode="single"
-//                       selected={field.value}
-//                       onSelect={field.onChange}
-//                       disabled={(date) =>
-//                         date > new Date() || date < new Date("1900-01-01")
-//                       }
-//                       initialFocus
-//                     />
-//                   </PopoverContent>
-//                 </Popover>
-//                 <FormDescription>
-//                   Your date of birth is used to calculate your age.
-//                 </FormDescription>
-//                 <FormMessage />
-//               </FormItem>
-//             )}
-//           />
-//           <FormField
-//             control={form.control}
-//             name="language"
-//             render={({ field }) => (
-//               <FormItem className="flex flex-col">
-//                 <FormLabel>Language</FormLabel>
-//                 <Popover>
-//                   <PopoverTrigger asChild>
-//                     <FormControl>
-//                       <Button
-//                         variant="outline"
-//                         role="combobox"
-//                         className={cn(
-//                           "w-[200px] justify-between",
-//                           !field.value && "text-muted-foreground",
-//                         )}
-//                       >
-//                         {field.value
-//                           ? languages.find(
-//                               (language) => language.value === field.value,
-//                             )?.label
-//                           : "Select language"}
-//                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-//                       </Button>
-//                     </FormControl>
-//                   </PopoverTrigger>
-//                   <PopoverContent className="w-[200px] p-0">
-//                     <Command>
-//                       <CommandInput placeholder="Search language..." />
-//                       <CommandEmpty>No language found.</CommandEmpty>
-//                       <CommandGroup>
-//                         {languages.map((language) => (
-//                           <CommandItem
-//                             value={language.label}
-//                             key={language.value}
-//                             onSelect={() => {
-//                               form.setValue("language", language.value);
-//                             }}
-//                           >
-//                             <CheckIcon
-//                               className={cn(
-//                                 "mr-2 h-4 w-4",
-//                                 language.value === field.value
-//                                   ? "opacity-100"
-//                                   : "opacity-0",
-//                               )}
-//                             />
-//                             {language.label}
-//                           </CommandItem>
-//                         ))}
-//                       </CommandGroup>
-//                     </Command>
-//                   </PopoverContent>
-//                 </Popover>
-//                 <FormDescription>
-//                   This is the language that will be used in the dashboard.
-//                 </FormDescription>
-//                 <FormMessage />
-//               </FormItem>
-//             )}
-//           />
-//           <Button type="submit">Update account</Button>
-//         </form>
-//       </Form>
-//     </div>
-//   );
-// };
+  return (
+    <div className="p-8 flex flex-col gap-3 items-center h-screen text-gray-800">
+      <span className="font-brand text-orange-500 text-4xl pb-16 text-center">
+        MealHub
+      </span>
+      <form onSubmit={handleSubmit} className="w-4/12 mx-auto">
+        <h1 className="mb-10 text-2xl font-header">Sign up</h1>
+        <div className="mb-5">
+          <label
+            htmlFor="email"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Your email
+          </label>
+          <input
+            type="email"
+            id="email"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lgblock w-full p-2.5"
+            placeholder="name@email.com"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            htmlFor="password"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Your password
+          </label>
+          <input
+            type="password"
+            id="password"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div className="mb-5">
+          <label
+            htmlFor="passwordConfirm"
+            className="block mb-2 text-sm font-medium text-gray-900"
+          >
+            Confirm password
+          </label>
+          <input
+            type="password"
+            id="passwordConfirm"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+            required
+          />
+        </div>
+        <span className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-3">
+            Have an account?
+            <button
+              type="button"
+              onClick={navToLogin}
+              className="text-white bg-emerald-500 hover:bg-emerald-700 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+            >
+              Log in
+            </button>
+          </span>
+          <button
+            type="submit"
+            className="text-white bg-orange-500 hover:bg-orange-700 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            Sign up
+          </button>
+        </span>
+      </form>
+    </div>
+  );
+}
 
-// export default AccountFormFields;
+export default SignUpPage;
