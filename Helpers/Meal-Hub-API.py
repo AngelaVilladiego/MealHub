@@ -48,73 +48,53 @@ def signUp():
     users_collection.insert_one(user)
     return jsonify({"message": "User created", "user_id": str(user["_id"])}), 201
 
-
-@app.route("/login", methods=['POST'])
-def login():
-    user_data = request.json
-    user = users_collection.find_one({"username": user_data["username"]})
-
-    if user and user["password"] == user_data["password"]:
-        return jsonify({"message": "Login successful", "user_id": str(user["_id"])}), 200
-    else:
-        return jsonify({"message": "Invalid username or password"}), 401
-
-
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('query')
-    number_of_results = request.args.get('number', 10)
-    results = api.search_recipes(query, number=number_of_results)
-    return jsonify(results.json())
-
-
 @app.route('/add_favourite', methods=['POST'])
 def add_favourite():
     data = request.json
     user_id = data['user_id']
     recipe_id = data['recipe_id']
-    recipe_url = data['recipe_url']
 
-    # Check if the recipe already exists in the 'recipes' collection
-    recipe = recipes_collection.find_one({"id": recipe_id})
-    if not recipe:
-        recipe = {"id": recipe_id, "url": recipe_url}
-        recipes_collection.insert_one(recipe)
-
-    # Add the recipe's ObjectId to the user's 'favourites' list
-    users_collection.update_one(
+    # Add the recipe's ID to the user's 'favourites' list
+    update_result = users_collection.update_one(
         {"_id": ObjectId(user_id)},
-        {"$addToSet": {"favourites": recipe_id}}
+        {"$addToSet": {"favourites": recipe_id}}  # Ensures the recipe_id is not duplicated in the list
     )
-    return jsonify({"message": "Favourite added successfully!"}), 200
 
-@app.route("/user/<user_id>/create_mealplan", methods=['POST'])
-def create_mealplan(user_id):
-    data = request.json
-    user_id = data["user_id"]
-
-    # Fetch the user from the database using the user_id
-    user = users_collection.find_one({"_id": user_id})
-    users_collection.insert_one(user)
-
-    if not user:
+    # Check the result of the update operation
+    if update_result.matched_count == 0:
         return jsonify({"message": "User not found"}), 404
+    elif update_result.modified_count == 0:
+        return jsonify({"message": "Recipe was already in the favourites list"}), 200
+    else:
+        return jsonify({"message": "Favourite added successfully!"}), 200
 
-    mealPlan = user["mealPlan"]
+# @app.route("/user/<user_id>/create_mealplan", methods=['POST'])
+# def create_mealplan(user_id):
+#     data = request.json
+#     user_id = data["user_id"]
+#
+#     # Fetch the user from the database using the user_id
+#     user = users_collection.find_one({"_id": user_id})
+#     users_collection.insert_one(user)
+#
+#     if not user:
+#         return jsonify({"message": "User not found"}), 404
+#
+#     mealPlan = user["mealPlan"]
+#
+#     for day in mealPlan:
+#         recipe_id = get_recipe_for_user(user_id)
+#         recipe_dto = get_recipeDTO_from_id(recipe_id)
+#         mealPlan[day] = recipe_dto
+#
+#     return mealPlan
 
-    for day in mealPlan:
-        recipe_id = get_recipe_for_user(user_id)
-        recipe_dto = get_recipeDTO_from_id(recipe_id)
-        mealPlan[day] = recipe_dto
-
-    return mealPlan
-
-@app.route("user/<user_id>/get_recipe_for_user")
-def get_recipe_for_user(user_id):
-    #return one recipeId based on the user's dietary restrictions and cuisine preferences
-
-def get_recipeDTO_from_id(recipe_id):
-    #create a recipe dto object from the recipe id
+# @app.route("user/<user_id>/get_recipe_for_user")
+# def get_recipe_for_user(user_id):
+#     #return one recipeId based on the user's dietary restrictions and cuisine preferences
+#
+# def get_recipeDTO_from_id(recipe_id):
+#     #create a recipe dto object from the recipe id
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
 def get_favourites(user_id):
