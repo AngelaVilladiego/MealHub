@@ -10,6 +10,7 @@ from bson.objectid import ObjectId
 from dataclasses import dataclass
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from DTOs.recipeDTO import RecipeDTO
 
 load_dotenv()
 
@@ -144,8 +145,9 @@ def get_recipe_for_user(user_id):
 
 # Retrieve a recipe by ID
 @app.route('/get_recipebyid', methods=['GET'])
-def get_recipeById(recipe_id):
-    url = f"https://api.spoonacular.com/food/ingredients/{recipe_id}/information?apiKey={api_key}"
+def get_recipeById():
+    recipe_id = request.args.get("recipe_id")
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
     response = requests.get(url)
 
     if response:
@@ -156,11 +158,28 @@ def get_recipeById(recipe_id):
 
 
 # create a recipe dto object from the recipe id
-@app.route('/get_recipedto', methods=['POST'])
-def get_recipeDTO_from_id(recipe_id):
-    recipe_id = request.json['recipe_id']
+@app.route('/get_recipedto', methods=['GET'])
+def get_recipeDTO_from_id():
+    recipe_id = request.args.get("recipe_id")
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
+    response = requests.get(url)
 
-    return
+    if response:
+        data = response.json()
+
+        recipe_dto = RecipeDTO(
+            recipe_id = recipe_id,
+            title= data["title"],
+            source_url=data["sourceUrl"],
+            image=data["image"],
+            prep_time=data["readyInMinutes"],
+            ingredients=[ingredient["name"] for ingredient in data["extendedIngredients"]]
+        )
+
+        return jsonify(recipe_dto.to_dict())
+    else:
+        return jsonify({"error": "Couldn't find recipe"})
+
 
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
