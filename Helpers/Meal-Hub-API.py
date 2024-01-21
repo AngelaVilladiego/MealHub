@@ -75,21 +75,12 @@ def add_favourite():
     data = request.json
     user_id = data['user_id']
     recipe_id = data['recipe_id']
-    recipe_url = data['recipe_url']
 
-    # Check if the recipe already exists in the 'recipes' collection
-    # recipe = recipes_collection.find_one({"id": recipe_id})
-    # if not recipe:
-    #     recipe = {"id": recipe_id, "url": recipe_url}
-    #     recipes_collection.insert_one(recipe)
-
-    # Add the recipe's ObjectId to the user's 'favourites' list
     users_collection.update_one(
         {"_id": ObjectId(user_id)},
         {"$addToSet": {"favourites": recipe_id}}
     )
     return jsonify({"message": "Favourite added successfully!"}), 200
-
 
 @app.route("/user/<user_id>/create_mealplan", methods=['POST'])
 def create_mealplan(user_id):
@@ -132,7 +123,7 @@ def get_recipe_for_user(user_id):
         # Uncommet this when it's needed
         # f"https://api.spoonacular.com/recipes/random?number=1&include-tags={cuisine_preferences}&exclude-tags={dietary_restriction}&apiKey={api_key}")
 
-        f'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey={api_key}'
+        'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey=35b3e7d707684b61bf0463a2834b2c86'
     )
     data = json.loads(response.text)
     recipe_id = data["recipes"][0]["id"]
@@ -148,22 +139,18 @@ def get_recipeDTO_from_id(recipe_id):
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
 def get_favourites(user_id):
-    return "ajdkl;fjakl;sdf"
-#     user = users_collection.find_one({"_id": ObjectId(user_id)})
-#     if user:
-#         favourite_recipe_ids = user['favourites']
-    #     favourite_recipes = recipes_collection.find({"id": {"$in": favourite_recipe_ids}})
-    #
-    #     # Convert the recipes to JSON serializable format
-    #     favourite_recipes_list = []
-    #     for recipe in favourite_recipes:
-    #         recipe['_id'] = str(recipe['_id'])  # Convert ObjectId to string
-    #         favourite_recipes_list.append(recipe)
-    #
-    #     return jsonify(favourite_recipes_list), 200
-    # else:
-    #     return jsonify({"message": "No user found"}), 404
-
+    try:
+        # Fetch the user document
+        user = users_collection.find_one({"_id": ObjectId(user_id)})
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        # Access the favourites list
+        favourite_recipe_ids = user['favourites']
+        return jsonify({"favourite_recipe_ids": favourite_recipe_ids}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
