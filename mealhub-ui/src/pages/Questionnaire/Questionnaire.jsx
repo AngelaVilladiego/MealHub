@@ -6,6 +6,7 @@ import "./Questionnaire.css";
 import NextButton from "../../components/Buttons/NextButton";
 import BackButton from "../../components/Buttons/BackButton";
 import CircleCheckbox from "../../components/CircleCheckbox.jsx/CircleCheckbox";
+import { SignUpUser } from "../../services/endpoints";
 
 function Questionnaire() {
   const navigate = useNavigate();
@@ -33,11 +34,23 @@ function Questionnaire() {
   }, [questionnaireDone]);
 
   const submitUser = () => {
-    //simulate request
-    console.log("navigating");
-    setTimeout(() => {
-      navigate("/dash");
-    }, 1000);
+    const userData = {
+      username: username,
+      password: password,
+      daysToPlan: userPreferences["daysToPlan"],
+      dietary_restrictions: userPreferences["dietary_restrictions"],
+      cuisine_preferences: userPreferences["cuisine_preferences"],
+    };
+
+    const requestPromise = SignUpUser(userData);
+    requestPromise.then((data) => {
+      console.log(data);
+
+      console.log("navigating");
+      setTimeout(() => {
+        navigate("/dash", { state: { userId: data["user_id"] } });
+      }, 1000);
+    });
   };
 
   const handleOptionChange = (option, preferenceType) => {
@@ -191,11 +204,11 @@ function Questionnaire() {
                     <CircleCheckbox
                       key={index}
                       labelText={option}
-                      isSelected={userPreferences[
-                        "cuisine_preferences"
-                      ].includes(option)}
+                      isSelected={userPreferences["daysToPlan"].includes(
+                        option
+                      )}
                       onToggleOption={() => {
-                        handleOptionChange(option, "cuisine_preferences");
+                        handleOptionChange(option, "daysToPlan");
                       }}
                     />
                   ))}
