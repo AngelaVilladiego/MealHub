@@ -8,6 +8,7 @@ export const GLOBALS = {
   LOGIN: "login",
   ADD_FAVOURITE: "add_favourite",
   CREATE_MEALPLAN: "create_mealplan",
+  GET_MEALPLAN: "user/get_mealplan",
 };
 
 export const PREFERENCE_OPTIONS = {

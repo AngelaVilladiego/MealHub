@@ -6,21 +6,33 @@ import CancelButton from "../../components/Buttons/CancelButton";
 import ConfirmButton from "../../components/Buttons/SaveButton";
 import AlertPopup from "../../components/AlertPopup/AlertPopup";
 import RegenerateButton from "../../components/Buttons/RegenerateButton";
+import { GetUserMealPlan } from "../../services/endpoints";
 import "./Overview.css";
 
 function Overview() {
   const location = useLocation();
-  const userId = location.state["user_id"];
+  const userId = location.state["userId"];
 
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [mealPlan, setMealPlan] = useState({});
+  const [mealPlan, setMealPlan] = useState(null);
   const [isConfirmingRegenerate, setIsConfirmingRegenerate] = useState(false);
 
   useEffect(() => {
     //get mealPlan
     console.log("id from overview:", userId);
+    const requestPromise = GetUserMealPlan(userId);
+    requestPromise.then((data) => {
+      console.log("got:", data);
+      setMealPlan(data);
+    });
   }, []);
+
+  useEffect(() => {
+    if (mealPlan != null) {
+      setIsLoading(false);
+    }
+  }, [mealPlan]);
 
   const onAddMeal = (weekday) => {
     console.log("adding meal overview on " + weekday);
@@ -100,7 +112,7 @@ function Overview() {
               )}
             </span>
           </div>
-          <ScheduleWeek onAddMeal={onAddMeal} />
+          <ScheduleWeek onAddMeal={onAddMeal} mealPlan={mealPlan} />
           {isConfirmingRegenerate && (
             <>
               <div className="absolute top-0 left-0 right-0 bottom-0 backdrop-blur-md bg-black bg-opacity-10">

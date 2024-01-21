@@ -40,7 +40,7 @@ function RecipeCard({
           />
         </button>
       </div>
-      <a href={sourceUrl}>
+      <a href={sourceUrl} target="_blank">
         <div className="p-2 group">
           <h5 className="text-lg text-ellipsis line-clamp-2 font-semibold leading-snug">
             {title}

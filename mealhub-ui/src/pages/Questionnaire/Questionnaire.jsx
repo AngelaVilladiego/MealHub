@@ -48,7 +48,9 @@ function Questionnaire() {
 
       console.log("navigating");
       setTimeout(() => {
-        navigate("/dash", { state: { userId: data["user_id"] } });
+        let userId = data["user_id"];
+        console.log("user id to pass:", userId);
+        navigate("/dash", { state: { userId: userId } });
       }, 1000);
     });
   };
