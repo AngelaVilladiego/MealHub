@@ -10,7 +10,10 @@ from bson.objectid import ObjectId
 from dataclasses import dataclass
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from DTOs.recipeDTO import RecipeDTO
+
 load_dotenv()
+
 api_key = os.getenv('API_KEY')
 mongo_pwd = os.getenv('MONGO_PWD')
 
@@ -44,7 +47,7 @@ def signUp():
     user = {
         "username": user_data["username"],
         "password": user_data["password"],  # Storing the password directly (not secure)
-        "favourites": [],
+        "favourites": [], # recipe ids
         "dietary_restrictions": user_data.get("dietary_restrictions", []),
         "cuisine_preferences": user_data.get("cuisine_preferences", []),
         "mealPlan": mealPlan
@@ -135,10 +138,43 @@ def get_recipe_for_user(user_id):
     converted = str(recipe_id)
     return jsonify({"recipe_id": converted})
 
+# Retrieve a recipe by ID
+@app.route('/get_recipebyid', methods=['GET'])
+def get_recipeById():
+    recipe_id = request.args.get("recipe_id")
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
+    response = requests.get(url)
+
+    if response:
+        return jsonify(response.json())
+    else:
+        return jsonify({"error": "Can't retrieve the recipe"})
+
+
 
 # create a recipe dto object from the recipe id
-def get_recipeDTO_from_id(recipe_id):
-    return
+@app.route('/get_recipedto', methods=['GET'])
+def get_recipeDTO_from_id():
+    recipe_id = request.args.get("recipe_id")
+    url = f"https://api.spoonacular.com/recipes/{recipe_id}/information?apiKey={api_key}"
+    response = requests.get(url)
+
+    if response:
+        data = response.json()
+
+        recipe_dto = RecipeDTO(
+            recipe_id = recipe_id,
+            title= data["title"],
+            source_url=data["sourceUrl"],
+            image=data["image"],
+            prep_time=data["readyInMinutes"],
+            ingredients=[ingredient["name"] for ingredient in data["extendedIngredients"]]
+        )
+
+        return jsonify(recipe_dto.to_dict())
+    else:
+        return jsonify({"error": "Couldn't find recipe"})
+
 
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
