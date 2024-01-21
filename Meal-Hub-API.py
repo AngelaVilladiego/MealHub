@@ -132,7 +132,8 @@ def get_recipe_for_user(user_id):
         # Uncommet this when it's needed
         # f"https://api.spoonacular.com/recipes/random?number=1&include-tags={cuisine_preferences}&exclude-tags={dietary_restriction}&apiKey={api_key}")
 
-        f'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey={api_key}')
+        f'https://api.spoonacular.com/recipes/random?number=1&include-tags=beef&apiKey={api_key}'
+    )
     data = json.loads(response.text)
     recipe_id = data["recipes"][0]["id"]
     print(recipe_id)
@@ -142,7 +143,7 @@ def get_recipe_for_user(user_id):
 
 # create a recipe dto object from the recipe id
 def get_recipeDTO_from_id(recipe_id):
-    return "klajd;lkfj;asdf"
+    return
 
 
 @app.route('/user/<user_id>/favourites', methods=['GET'])
