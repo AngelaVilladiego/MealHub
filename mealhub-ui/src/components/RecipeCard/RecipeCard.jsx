@@ -24,7 +24,7 @@ function RecipeCard({
 
   return (
     <CardBase className="max-w-sm">
-      <div className="relative h-1/2">
+      <div className="relative h-24">
         <img
           src={image}
           alt="recipe image"
