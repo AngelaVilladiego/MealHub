@@ -5,17 +5,20 @@ import spoonacular as sp
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 from bson.objectid import ObjectId
 from dataclasses import dataclass
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from DTOs.recipeDTO import RecipeDTO
 
-load_dotenv()
+
+load_dotenv(find_dotenv())
 
 api_key = os.getenv('API_KEY')
 mongo_pwd = os.getenv('MONGO_PWD')
+
+print(mongo_pwd)
 
 api = sp.API(api_key)
 
