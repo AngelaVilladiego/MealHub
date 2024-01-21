@@ -9,3 +9,27 @@ export const GLOBALS = {
   ADD_FAVOURITE: "add_favourite",
   CREATE_MEALPLAN: "create_mealplan",
 };
+
+export const PREFERENCE_OPTIONS = {
+  DIETARY_RESTRICTIONS: ["Vegan", "Vegetarian", "Gluten-free"],
+  WEEKDAYS: [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ],
+  CUISINES: [
+    "Asian",
+    "Chinese",
+    "Indian",
+    "Italian",
+    "Korean",
+    "Mediterranean",
+    "Mexican",
+    "Middle Eastern",
+    "Thai",
+  ],
+};

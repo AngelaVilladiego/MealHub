@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import "tailwindcss/tailwind.css";
 
-const DietaryRestrictionList = () => {
+const PreferencesQuestionnaire = () => {
   const [step, setStep] = useState(0);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
@@ -12,11 +11,29 @@ const DietaryRestrictionList = () => {
     },
     {
       title: "Days to Cook",
-      options: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      options: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
     },
     {
       title: "Cuisines",
-      options: ["Asian", "Chinese", "Indian", "Italian", "Korean", "Mediterranean", "Mexican", "Middle Eastern", "Thai"],
+      options: [
+        "Asian",
+        "Chinese",
+        "Indian",
+        "Italian",
+        "Korean",
+        "Mediterranean",
+        "Mexican",
+        "Middle Eastern",
+        "Thai",
+      ],
     },
   ];
 
@@ -50,19 +67,29 @@ const DietaryRestrictionList = () => {
     <div className="min-h-screen bg-gray-100 p-8">
       <h3 className="text-center text-orange-500 text-5xl">Meal Hub</h3>
       <p className="text-center text-gray-700 text-base mt-2">Let's Begin</p>
-      <h4 className="text-center text-orange-500 text-6xl mt-4">Meal Planning</h4>
+      <h4 className="text-center text-orange-500 text-6xl mt-4">
+        Meal Planning
+      </h4>
 
       <div className="mt-4">
         {step < steps.length && (
           <div>
-            <h5 className="text-center text-gray-700 text-3xl">{`Step${step + 1}: ${steps[step].title}`}</h5>
+            <h5 className="text-center text-gray-700 text-3xl">{`Step${
+              step + 1
+            }: ${steps[step].title}`}</h5>
 
             <div className="mt-4 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {steps[step].options.map((option, index) => (
                 <label
                   key={index}
-                  className={`block p-8 border rounded cursor-pointer transition-all ${
-                    selectedOptions.includes(option) ? "bg-blue-200" : "bg-white"
+                  className={`block text-gray-600 p-8 border-2 bg-gray-50
+                   border-gray-300 rounded-lg 
+                  cursor-pointer transition-all ease-in-out 
+                  hover:shadow-md hover:-translate-x-1 hover:-translate-y-1
+                  hover:bg-white ${
+                    selectedOptions.includes(option)
+                      ? "border-emerald-500 bg-emerald-100 hover:bg-emerald-100 hover:border-emerald-500"
+                      : ""
                   }`}
                 >
                   <input
@@ -99,4 +126,4 @@ const DietaryRestrictionList = () => {
   );
 };
 
-export default DietaryRestrictionList;
+export default PreferencesQuestionnaire;
